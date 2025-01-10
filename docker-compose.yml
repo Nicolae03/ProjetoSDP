@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  eventos:
+    image: eventos:latest
+    container_name: eventos
+    build:
+      context: ./microservices/events
+    ports:
+      - "5001:5001"
+    volumes:
+      - eventos-data:/app/data
+
+  usuarios:
+    image: usuarios:latest
+    container_name: usuarios
+    build:
+      context: ./microservices/users
+    ports:
+      - "5002:5002"
+    volumes:
+      - usuarios-data:/app/data
+
+  pagamentos:
+    image: pagamentos:latest
+    container_name: pagamentos
+    build:
+      context: ./microservices/payments
+    ports:
+      - "5003:5003"
+    volumes:
+      - pagamentos-data:/app/data
+
+  bilhetes:
+    image: bilhetes:latest
+    container_name: bilhetes
+    build:
+      context: ./microservices/tickets
+    ports:
+      - "5004:5004"
+    depends_on:
+      - eventos
+    environment:
+      - EVENT_SERVICE_URL=http://eventos:5001/eventos
+    volumes:
+      - bilhetes-data:/app/data
+
+volumes:
+  eventos-data:
+    driver: local
+  usuarios-data:
+    driver: local
+  pagamentos-data:
+    driver: local
+  bilhetes-data:
+    driver: local
