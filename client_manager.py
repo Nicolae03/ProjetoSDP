@@ -7,7 +7,6 @@ PAYMENT_SERVICE_URL = "http://localhost:5003"
 
 current_user = None  # Armazena o email do usuário logado
 
-
 def menu_principal():
     """Exibe o menu principal para o cliente."""
     while True:
@@ -26,7 +25,6 @@ def menu_principal():
             break
         else:
             print("Opção inválida. Tente novamente.")
-
 
 def registrar_usuario():
     """Registra um novo usuário."""
@@ -48,10 +46,9 @@ def registrar_usuario():
         print("\nErro ao se conectar ao servidor:")
         print(e)
 
-
 def fazer_login():
     """Realiza o login do usuário."""
-    global current_user  # Declaração global no início da função
+    global current_user  # Declaração global precisa ser feita no início da função
     email = input("\nDigite seu email: ")
     password = input("Digite sua senha: ")
 
@@ -71,11 +68,9 @@ def fazer_login():
         print("\nErro ao se conectar ao servidor:")
         print(e)
 
-
-
 def menu_cliente_logado():
     """Exibe o menu para o cliente logado."""
-    global current_user  # A declaração global precisa ser feita no início da função
+    global current_user  # A declaração global precisa ser a primeira linha da função
     while True:
         print(f"\n=== Bem-vindo, {current_user} ===")
         print("1. Depositar dinheiro")
@@ -96,8 +91,6 @@ def menu_cliente_logado():
             break
         else:
             print("Opção inválida. Tente novamente.")
-
-
 
 def depositar_dinheiro():
     """Permite ao usuário depositar dinheiro na conta."""
@@ -124,7 +117,6 @@ def depositar_dinheiro():
         print("\nErro ao se conectar ao servidor:")
         print(e)
 
-
 def listar_bilhetes():
     """Lista todos os bilhetes disponíveis."""
     try:
@@ -147,8 +139,6 @@ def listar_bilhetes():
     except requests.exceptions.RequestException as e:
         print("\nErro ao se conectar ao servidor:")
         print(e)
-
-
 
 def comprar_bilhete():
     """Permite ao usuário comprar bilhetes."""
@@ -181,6 +171,8 @@ def comprar_bilhete():
                 ticket["ticket_type"].strip().lower() == tipo_bilhete
                 for ticket in bilhetes
             )
+
+            # Log adicional se o bilhete não for encontrado
             if not ticket_exists:
                 print("\nErro: O bilhete especificado não existe. Verifique o nome do evento e o tipo de bilhete.")
                 return
@@ -207,7 +199,6 @@ def comprar_bilhete():
     except requests.exceptions.RequestException as e:
         print("\nErro ao se conectar ao servidor:")
         print(e)
-
 
 
 if __name__ == "__main__":

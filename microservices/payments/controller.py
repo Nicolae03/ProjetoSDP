@@ -7,9 +7,9 @@ payment_controller = Blueprint('payment_controller', __name__)
 # Banco de dados em memória para pagamentos
 payments_db = []
 
-# Endereço do serviço de usuários e bilhetes
-USER_SERVICE_URL = "http://localhost:5002"
-TICKET_SERVICE_URL = "http://localhost:5004/tickets"
+# Endereço do serviço de usuários e bilhetes no Kubernetes
+USER_SERVICE_URL = "http://users-service/users"
+TICKET_SERVICE_URL = "http://tickets-service/tickets"
 
 # Rota para listar todos os pagamentos (GET)
 @payment_controller.route("/payments", methods=["GET"])
@@ -53,6 +53,7 @@ def process_payment():
     except ValueError:
         return jsonify({"message": "Quantity must be a valid integer"}), 400
 
+
 def get_ticket_price(event_name, ticket_type):
     """Consulta o preço do bilhete no microserviço de bilhetes."""
     try:
@@ -70,7 +71,9 @@ def get_ticket_price(event_name, ticket_type):
                 event_name_api = ticket["event_name"].strip().lower()
                 ticket_type_api = ticket["ticket_type"].strip().lower()
 
-                print(f"Comparando: '{event_name_input}' == '{event_name_api}' e '{ticket_type_input}' == '{ticket_type_api}'")
+                # Log detalhado da comparação
+                print(f"Comparando entrada: evento='{event_name_input}', tipo='{ticket_type_input}' "
+                      f"com evento da API='{event_name_api}', tipo da API='{ticket_type_api}'")
 
                 if event_name_input == event_name_api and ticket_type_input == ticket_type_api:
                     print(f"Bilhete encontrado: {ticket}")
@@ -83,11 +86,10 @@ def get_ticket_price(event_name, ticket_type):
         return None
 
 
-
 def check_user_balance(user_email, total_price):
     """Verifica se o usuário tem saldo suficiente para a compra."""
     try:
-        response = requests.get(f"{USER_SERVICE_URL}/users/{user_email}")
+        response = requests.get(f"{USER_SERVICE_URL}/{user_email}")
         if response.status_code == 200:
             user = response.json()
             return user["balance"] >= total_price
@@ -96,10 +98,11 @@ def check_user_balance(user_email, total_price):
         print(f"Erro ao se conectar ao serviço de usuários: {e}")
         return False
 
+
 def deduct_user_balance(user_email, total_price):
     """Deduz o saldo do usuário."""
     try:
-        response = requests.post(f"{USER_SERVICE_URL}/users/deduct_balance", json={"email": user_email, "amount": total_price})
+        response = requests.post(f"{USER_SERVICE_URL}/deduct_balance", json={"email": user_email, "amount": total_price})
         return response.status_code == 200
     except requests.exceptions.RequestException as e:
         print(f"Erro ao se conectar ao serviço de usuários: {e}")
