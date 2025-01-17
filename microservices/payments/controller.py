@@ -66,15 +66,22 @@ def get_ticket_price(event_name, ticket_type):
             tickets = response.json()
             print("\n=== Bilhetes recebidos da API ===")
             print(tickets)  # Log para verificar os bilhetes recebidos
-
-            # Padronizar os valores para comparação
-            event_name_input = event_name.strip().lower()
-            ticket_type_input = ticket_type.strip().lower()
+            #Prof. Inês Almeida - Fizeram bem em converter os inputs para minusculas,
+            #Mas para além disso também devem ter em atenção com os caracteres especiais
+            #Pois temos garantir ao máximo que os nomes são examente iguais, por isso troquei o lower por casefold. Pois o casefold faz 2 em 1, 
+            #para além de converter em minusculas  como o lower() tambem converte caracteres especiais
+            #É preciso ter muito cuidado com os inputs pois basta um caracter errada para que o bilhete não seja encontrada.
+            #event_name_input = event_name.strip().lower()
+            #ticket_type_input = ticket_type.strip().lower()
+            event_name_input = event_name.strip().casefold()
+            ticket_type_input = ticket_type.strip().casefold()
 
             for ticket in tickets:
-                event_name_api = ticket["event_name"].strip().lower()
-                ticket_type_api = ticket["ticket_type"].strip().lower()
-
+                #event_name_api = ticket["event_name"].strip().lower()
+                #ticket_type_api = ticket["ticket_type"].strip().lower()
+                event_name_api = ticket["event_name"].strip().lower().casefold()
+                ticket_type_api = ticket["ticket_type"].strip().lower().casefold()
+                
                 # Log detalhado da comparação
                 print(f"Comparando entrada: evento='{event_name_input}', tipo='{ticket_type_input}' "
                       f"com evento da API='{event_name_api}', tipo da API='{ticket_type_api}'")
