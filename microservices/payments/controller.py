@@ -14,15 +14,15 @@ TICKET_SERVICE_URL = "http://tickets-service/tickets""""
 #depois quando ativarem o Kubernetes por completo é que voltam a utilizar o url que tinham
 USER_SERVICE_URL = "http://localhost:5002/users"
 TICKET_SERVICE_URL = "http://localhost:5004/tickets"
-
+#Prof.Inês Almeida: Com alteração do prefix no app.py foi necessário alterar /payments para /
 # Rota para listar todos os pagamentos (GET)
-@payment_controller.route("/payments", methods=["GET"])
+@payment_controller.route("/", methods=["GET"])
 def list_payments():
     """Lista todos os pagamentos registrados."""
     return jsonify([payment.to_dict() for payment in payments_db]), 200
 
 # Rota para processar pagamentos (POST)
-@payment_controller.route("/payments", methods=["POST"])
+@payment_controller.route("/", methods=["POST"])
 def process_payment():
     data = request.json
 
