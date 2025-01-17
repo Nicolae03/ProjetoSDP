@@ -8,8 +8,12 @@ payment_controller = Blueprint('payment_controller', __name__)
 payments_db = []
 
 # Endereço do serviço de usuários e bilhetes no Kubernetes
-USER_SERVICE_URL = "http://users-service/users"
-TICKET_SERVICE_URL = "http://tickets-service/tickets"
+"""USER_SERVICE_URL = "http://users-service/users"
+TICKET_SERVICE_URL = "http://tickets-service/tickets""""
+#Prof. Inês Almeida - Neste momento, o url certo é com o localhost,
+#depois quando ativarem o Kubernetes por completo é que voltam a utilizar o url que tinham
+USER_SERVICE_URL = "http://localhost:5002/users"
+TICKET_SERVICE_URL = "http://localhost:5004/tickets"
 
 # Rota para listar todos os pagamentos (GET)
 @payment_controller.route("/payments", methods=["GET"])
